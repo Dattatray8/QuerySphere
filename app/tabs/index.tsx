@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Hero from '../components/home/Hero'
 
 const index = () => {
-  return (
-    <View>
-      <Text>index</Text>
-    </View>
-  )
+    return (
+        <ScrollView>
+            <Hero />
+        </ScrollView>
+    )
 }
 
 export default index
