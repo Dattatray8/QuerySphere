@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
@@ -20,7 +20,12 @@ export default function TabLayout() {
                 name="search"
                 options={{
                     tabBarLabel: 'Search',
-                    tabBarIcon: ({ color }) => <Ionicons size={28} name="search" color={color} />
+                    tabBarIcon: ({ color }) => <Ionicons size={28} name="search" color={color} />,
+                    title: 'Search Users',
+                    headerLeft: () => (
+                        <Ionicons name="arrow-back" size={22} style={{ marginLeft: 20, marginRight: 10 }} onPress={() => router.push("..")} />
+                    ),
+                    headerTitleStyle: {fontWeight: 800}
                 }} />
             <Tabs.Screen
                 name="chat"
