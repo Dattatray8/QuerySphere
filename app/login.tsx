@@ -1,9 +1,45 @@
-import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, ToastAndroid, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { serverUrl } from '@/config/config'
+import { setUserData } from '@/redux/userSlice'
 
 const login = () => {
+    const [loading, setLoading] = useState(false);
+    const [formValue, setFormValue] = useState({
+        userName: "",
+        password: "",
+    });
+    const dispatch = useDispatch();
+
+    const handleLogin = async () => {
+        for (let key in formValue) {
+            if (formValue[key] === "") {
+                ToastAndroid.show(`${key} is empty`, 2);
+                return;
+            }
+        }
+        try {
+            setLoading(true);
+            const res = await axios.post(
+                `${serverUrl}/api/v1/auth/login`,
+                formValue,
+                { withCredentials: true }
+            );
+            ToastAndroid.show(res?.data?.message, 2);
+            dispatch(setUserData(res?.data?.safeUser));
+            router.back();
+        } catch (error: any) {
+            setLoading(false);
+            ToastAndroid.show(error?.response?.data?.message || error?.message, 2);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -19,14 +55,18 @@ const login = () => {
                             <View style={styles.body}>
                                 <View style={styles.inputBox}>
                                     <Ionicons name='person' color={"#cdcdcdff"} />
-                                    <TextInput placeholder='Username' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} accessibilityLabel="Username Input" />
+                                    <TextInput placeholder='Username' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} accessibilityLabel="Username Input" onChangeText={(text) => setFormValue({ ...formValue, userName: text })} />
                                 </View>
                                 <View style={styles.inputBox}>
                                     <Ionicons name='lock-closed' color={"#cdcdcdff"} />
-                                    <TextInput placeholder='Password' secureTextEntry={true} placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} />
+                                    <TextInput placeholder='Password' secureTextEntry={true} placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} onChangeText={(text) => setFormValue({ ...formValue, password: text })} />
                                 </View>
-                                <Pressable style={styles.button}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Login</Text>
+                                <Pressable style={styles.button} onPress={handleLogin}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
+                                        {loading ? (
+                                            <ActivityIndicator />
+                                        ) : "Login"}
+                                    </Text>
                                 </Pressable>
                             </View>
                             <View style={styles.footer}>
@@ -74,7 +114,7 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40
     },
-    
+
     head: {
         flexDirection: 'row',
         justifyContent: "center",
@@ -111,7 +151,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         borderRadius: 5
     },
-    
+
     footer: {
         flexDirection: 'row',
         justifyContent: 'center',

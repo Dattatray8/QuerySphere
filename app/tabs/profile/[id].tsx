@@ -1,17 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { router } from 'expo-router';
+import useCurrentUser from '@/hooks/useCurrentUser';
 
 const profile = () => {
-  const isLogin = false;
+  const {user} = useCurrentUser();
   useEffect(() => {
-    if (!isLogin) {
+    if (!user?._id) {
       router.push("/login")
-    }
+    } 
   }, [])
   return (
     <View>
-      <Text>profile</Text>
+      <Text>profile {user?.userName}</Text>
     </View>
   )
 }
