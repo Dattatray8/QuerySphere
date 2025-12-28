@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, ToastAndroid, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { serverUrl } from '@/config/config'
 import { setUserData } from '@/redux/userSlice'
+import Toast from 'react-native-toast-message'
 
 const login = () => {
     const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ const login = () => {
     const handleLogin = async () => {
         for (let key in formValue) {
             if (formValue[key] === "") {
-                ToastAndroid.show(`${key} is empty`, 2);
+                Toast.show({ type: "error", text1: `${key} is empty` });
                 return;
             }
         }
@@ -29,12 +30,12 @@ const login = () => {
                 formValue,
                 { withCredentials: true }
             );
-            ToastAndroid.show(res?.data?.message, 2);
+            Toast.show({ type: 'success', text1: res?.data?.message })
             dispatch(setUserData(res?.data?.safeUser));
             router.back();
         } catch (error: any) {
             setLoading(false);
-            ToastAndroid.show(error?.response?.data?.message || error?.message, 2);
+            Toast.show({ type: 'error', text1: error?.response?.data?.message || error?.message })
         } finally {
             setLoading(false);
         }

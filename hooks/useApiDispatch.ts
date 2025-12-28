@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/questionSlice";
-import { ToastAndroid } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function useApiDispatch() {
   const dispatch = useDispatch();
@@ -10,8 +10,11 @@ export default function useApiDispatch() {
       dispatch(setLoading(true));
       const res = await promiseFunc();
       if (onSuccess) onSuccess(res.data);
-    } catch (err:any) {
-      ToastAndroid.show(err?.response?.data?.message || err.message, 2);
+    } catch (err: any) {
+      Toast.show({
+        type: "error",
+        text1: err?.response?.data?.message || err.message,
+      });
     } finally {
       dispatch(setLoading(false));
     }

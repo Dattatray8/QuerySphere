@@ -1,8 +1,9 @@
-import { Image, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import axios from "axios"
 import { serverUrl } from '@/config/config'
+import Toast from 'react-native-toast-message'
 
 const search = () => {
   let [search, setSearch] = useState("");
@@ -19,7 +20,7 @@ const search = () => {
       setResults(res?.data.users || []);
     } catch (error: any) {
       setLoading(false);
-      ToastAndroid.show(error?.response?.data?.message || error.message, 5)
+      Toast.show({ type: 'error', text1: error?.response?.data?.message || error.message })
     } finally {
       setLoading(false);
     }
@@ -27,7 +28,7 @@ const search = () => {
 
   const handleSearchClick = () => {
     if (!search.trim()) {
-      ToastAndroid.show("Empty search not possible", 2)
+      Toast.show({ type: 'error', text1: "Empty search not possible" })
       return
     }
     getUsers()

@@ -4,12 +4,8 @@ import { router } from 'expo-router';
 import useCurrentUser from '@/hooks/useCurrentUser';
 
 const profile = () => {
-  const {user} = useCurrentUser();
-  useEffect(() => {
-    if (!user?._id) {
-      router.push("/login")
-    } 
-  }, [])
+  const { user } = useCurrentUser();
+
   return (
     <View>
       <Text>profile {user?.userName}</Text>
