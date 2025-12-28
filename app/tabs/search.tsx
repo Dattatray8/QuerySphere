@@ -2,6 +2,7 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, View } fr
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import axios from "axios"
+import { serverUrl } from '@/config/config'
 
 const search = () => {
   let [search, setSearch] = useState("");
@@ -12,7 +13,7 @@ const search = () => {
   const getUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`https://queryspherebackend.onrender.com/api/v1/users/search?keyword=${encodeURIComponent(
+      const res = await axios.get(`${serverUrl}/api/v1/users/search?keyword=${encodeURIComponent(
         search.trim()
       )}`, { withCredentials: true })
       setResults(res?.data.users || []);
