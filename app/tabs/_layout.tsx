@@ -2,9 +2,30 @@ import { router, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Image, StyleSheet, Text } from "react-native";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { serverUrl } from "@/config/config";
+import { setUserData } from "@/redux/userSlice";
+import Toast from "react-native-toast-message";
 
 export default function TabLayout() {
     const { user, isLoggedIn, loading } = useCurrentUser();
+    const dispatch = useDispatch();
+    
+    async function handleLogOut() {
+        try {
+            await axios.get(`${serverUrl}/api/v1/auth/logout`, {
+                withCredentials: true,
+            });
+            dispatch(setUserData(null));
+            router.back();
+        } catch (error: any) {
+            Toast.show({
+                type: "error",
+                text1: error?.response?.data?.message || error?.message,
+            });
+        }
+    }
 
     return (
         <Tabs>
@@ -26,7 +47,7 @@ export default function TabLayout() {
                             : !loading && isLoggedIn ? (
                                 <Image source={user?.profileImage ? { uri: user.profileImage } : require("../../assets/user.png")} style={styles.userImage} />
                             ) : (
-                                <Text style={styles.authBtn}>Login</Text>
+                                <Text style={styles.authBtn} onPress={() => router.push('/login')}>Login</Text>
                             )
                     )
                 }} />
@@ -57,6 +78,10 @@ export default function TabLayout() {
                 name={isLoggedIn ? "profile/[id]" : "login"}
                 options={{
                     tabBarLabel: 'Profile',
+                    headerTitle: 'Profile',
+                    headerRight: () => (
+                        <Text style={styles.authBtn} onPress={handleLogOut}>Logout</Text>
+                    ),
                     tabBarIcon: ({ color }) => <Ionicons size={28} name="person" color={color} />
                 }} />
         </Tabs>

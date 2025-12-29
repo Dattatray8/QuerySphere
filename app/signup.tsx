@@ -1,9 +1,55 @@
-import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, ScrollView, TouchableWithoutFeedback, Keyboard, Platform, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
+import DropDownPicker from "react-native-dropdown-picker"
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { serverUrl } from '@/config/config'
+import Toast from 'react-native-toast-message'
+import { setUserData } from '@/redux/userSlice'
 
 const signup = () => {
+    const [open, setOpen] = useState(false);
+    const items = [
+        { label: 'Role', value: "" },
+        { label: 'Student', value: 'student' },
+        { label: 'Teacher', value: 'teacher' },
+    ]
+    const [loading, setLoading] = useState(false);
+    const [formValue, setFormValue] = useState({
+        role: "",
+        userName: "",
+        email: "",
+        password: "",
+    });
+    const dispatch = useDispatch();
+
+    const handleSignup = async () => {
+        for (let key in formValue) {
+            if (formValue[key] === "") {
+                Toast.show({ type: "error", text1: `${key} is empty` });
+                return;
+            }
+        }
+        try {
+            setLoading(true);
+            const res = await axios.post(
+                `${serverUrl}/api/v1/auth/signup`,
+                formValue,
+                { withCredentials: true }
+            );
+            Toast.show({ type: 'success', text1: res?.data?.message })
+            dispatch(setUserData(res?.data?.safeUser));
+            router.back();
+        } catch (error: any) {
+            setLoading(false);
+            Toast.show({ type: 'error', text1: error?.response?.data?.message || error?.message })
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -17,21 +63,39 @@ const signup = () => {
                                 <Text style={styles.titleText}>SignUp to QuerySphere</Text>
                             </View>
                             <View style={styles.body}>
-                                
+                                <View style={styles.dropDownContainer}>
+                                    <DropDownPicker
+                                        items={items}
+                                        value={formValue.role}
+                                        open={open}
+                                        setOpen={setOpen}
+                                        setValue={(callback) =>
+                                            setFormValue((prev) => ({
+                                                ...prev,
+                                                role: callback(prev.role),
+                                            }))
+                                        }
+                                        style={styles.dropdown}
+                                    />
+                                </View>
                                 <View style={styles.inputBox}>
                                     <Ionicons name='person' color={"#cdcdcdff"} />
-                                    <TextInput placeholder='Username' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} />
+                                    <TextInput placeholder='Username' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} onChangeText={(text) => setFormValue({ ...formValue, userName: text })} />
                                 </View>
                                 <View style={styles.inputBox}>
                                     <Ionicons name='mail' color={"#cdcdcdff"} />
-                                    <TextInput placeholder='mail@site.com' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} />
+                                    <TextInput placeholder='mail@site.com' placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} onChangeText={(text) => setFormValue({ ...formValue, email: text })} />
                                 </View>
                                 <View style={styles.inputBox}>
                                     <Ionicons name='lock-closed' color={"#cdcdcdff"} />
-                                    <TextInput placeholder='Password' secureTextEntry={true} placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} />
+                                    <TextInput placeholder='Password' secureTextEntry={true} placeholderTextColor={"#cdcdcdff"} style={{ width: 250 }} onChangeText={(text) => setFormValue({ ...formValue, password: text })} />
                                 </View>
-                                <Pressable style={styles.button}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>SignUp</Text>
+                                <Pressable style={styles.button} onPress={handleSignup}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
+                                        {loading ? (
+                                            <ActivityIndicator />
+                                        ) : "SignUp"}
+                                    </Text>
                                 </Pressable>
                             </View>
                             <View style={styles.footer}>
@@ -121,5 +185,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         gap: 5
+    },
+
+    dropDownContainer: {
+        width: 300,
+        alignSelf: 'center'
+    },
+
+    dropdown: {
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
     }
 })
