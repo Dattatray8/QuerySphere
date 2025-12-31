@@ -1,10 +1,14 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { router } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from "expo-linear-gradient"
+import useCurrentUser from '@/hooks/useCurrentUser'
+import LoginMessage from '../LoginMessage'
 
 const Hero = () => {
+    const { isLoggedIn } = useCurrentUser();
+    const [showLoginMsg, setShowLoginMsg] = useState(false);
     const heroFeatures = [
         {
             icon: 'shield-outline',
@@ -34,7 +38,7 @@ const Hero = () => {
             ]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            >
+        >
             <ScrollView>
                 <View style={styles.hero}>
                     <View style={styles.heroTitle}>
@@ -42,8 +46,20 @@ const Hero = () => {
                         <Text style={styles.heroTitleText2}>QuerySphere</Text>
                     </View>
                     <Text style={styles.heroDesc}>Your institution's private doubt-solving ecosystem. Get instant answers through peer collaboration, AI assistance, and teacher-verified solutions.</Text>
-                    <Text style={styles.heroBtn1} onPress={() => router.push('/tabs/chat')}>Start Asking</Text>
-                    <Text style={styles.heroBtn2} onPress={() => router.push('/tabs/feed')}>Explore Feed</Text>
+                    <Text style={styles.heroBtn1} onPress={() => {
+                        if (!isLoggedIn) {
+                            setShowLoginMsg(true)
+                        } else {
+                            router.push('/tabs/chat')
+                        }
+                    }}>Start Asking</Text>
+                    <Text style={styles.heroBtn2} onPress={() => {
+                        if (isLoggedIn) {
+                            router.push('/tabs/feed')
+                        } else {
+                            setShowLoginMsg(true)
+                        }
+                    }}>Explore Feed</Text>
                 </View>
                 <View style={styles.featureContainer}>
                     {heroFeatures.map((feature, index) => (
@@ -56,6 +72,11 @@ const Hero = () => {
                         </View>
                     ))}
                 </View>
+                {showLoginMsg && <LoginMessage
+                    visible={showLoginMsg}
+                    onClose={() => setShowLoginMsg(false)}
+                />
+                }
             </ScrollView>
         </LinearGradient>
     )
