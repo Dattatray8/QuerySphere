@@ -19,8 +19,23 @@ const LoginMessage = ({ visible, onClose }) => {
                     </Text>
 
                     <View style={styles.actions}>
-                        <Text onPress={() => router.push('/login')}>Login</Text>
-                        <Text onPress={() => router.push('/signup')}>SignUp</Text>
+                        <Text
+                            onPress={() => {
+                                onClose();
+                                router.push('/login');
+                            }}
+                        >
+                            Login
+                        </Text>
+
+                        <Text
+                            onPress={() => {
+                                onClose();
+                                router.push('/signup');
+                            }}
+                        >
+                            SignUp
+                        </Text>
                     </View>
                 </View>
             </View>

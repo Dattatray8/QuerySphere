@@ -9,6 +9,7 @@ import { setUserData } from "@/redux/userSlice";
 import Toast from "react-native-toast-message";
 import LoginMessage from "../components/LoginMessage";
 import { useState } from "react";
+import Button from "../components/ui/Button";
 
 export default function TabLayout() {
     const { user, isLoggedIn, loading } = useCurrentUser();
@@ -51,7 +52,10 @@ export default function TabLayout() {
                                 : !loading && isLoggedIn ? (
                                     <Image source={user?.profileImage ? { uri: user.profileImage } : require("../../assets/user.png")} style={styles.userImage} />
                                 ) : (
-                                    <Text style={styles.authBtn} onPress={() => router.push('/login')}>Login</Text>
+                                    <Button text={'Login'} onClick={() => router.push('/login')} style={{
+                                        padding: 10,
+                                        marginHorizontal: 20,
+                                    }} />
                                 )
                         )
                     }} />
@@ -84,7 +88,10 @@ export default function TabLayout() {
                     name="feed"
                     options={{
                         tabBarLabel: 'Feed',
-                        tabBarIcon: ({ color }) => <Ionicons size={28} name="albums" color={color} />
+                        tabBarIcon: ({ color }) => <Ionicons size={28} name="albums" color={color} />,
+                        headerTitle: () => (
+                            <Text>Feed</Text>
+                        )
                     }}
                     listeners={{
                         tabPress: (e) => {
@@ -100,7 +107,10 @@ export default function TabLayout() {
                         tabBarLabel: 'Profile',
                         headerTitle: 'Profile',
                         headerRight: () => (
-                            <Text style={styles.authBtn} onPress={handleLogOut}>Logout</Text>
+                            <Button text={'Logout'} onClick={handleLogOut} style={{
+                                padding: 10,
+                                marginHorizontal: 20,
+                            }} />
                         ),
                         tabBarIcon: ({ color }) => <Ionicons size={28} name="person" color={color} />
                     }} />
@@ -115,15 +125,6 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-    authBtn: {
-        backgroundColor: '#f8f8f8',
-        padding: 10,
-        marginHorizontal: 20,
-        borderWidth: 1,
-        borderColor: '#e8e8e8',
-        borderRadius: 5
-    },
-
     userImage: {
         width: 40,
         height: 40,
