@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Button = ({ text, onClick, style }) => {
+const Button = ({ text, onClick, style }: { text: string, onClick: () => void, style?: any }) => {
     return (
         <Text style={[styles.btn, style]} onPress={onClick}>{text}</Text>
     )

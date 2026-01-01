@@ -7,12 +7,12 @@ import { serverUrl } from "@/config/config";
 import Toast from "react-native-toast-message";
 
 function useQuestions() {
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState<Boolean>(false);
+  const [hasMore, setHasMore] = useState<Boolean>(true);
   const [message, setMessage] = useState<string | null>(null);
 
   const dispatch = useDispatch();
-  const { questions, page } = useSelector((state) => state.question);
+  const { questions, page } = useSelector((state: any) => state.question);
   console.log(page);
   useEffect(() => {
     const fetchQuestions = async () => {

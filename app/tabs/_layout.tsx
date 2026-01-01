@@ -65,10 +65,7 @@ export default function TabLayout() {
                         tabBarLabel: 'Search',
                         tabBarIcon: ({ color }) => <Ionicons size={28} name="search" color={color} />,
                         title: 'Search Users',
-                        headerLeft: () => (
-                            <Ionicons name="arrow-back" size={22} style={{ marginLeft: 20, marginRight: 10 }} onPress={() => router.push("..")} />
-                        ),
-                        headerTitleStyle: { fontWeight: 800 }
+                        headerTitleStyle: { fontWeight: 800, marginLeft: 10 }
                     }} />
                 <Tabs.Screen
                     name="chat"
@@ -90,8 +87,8 @@ export default function TabLayout() {
                         tabBarLabel: 'Feed',
                         tabBarIcon: ({ color }) => <Ionicons size={28} name="albums" color={color} />,
                         headerTitle: () => (
-                            <Text>Feed</Text>
-                        )
+                            <Text style={{ fontWeight: 'bold', fontSize: 22, marginLeft: 10 }}>Feed</Text>
+                        ),
                     }}
                     listeners={{
                         tabPress: (e) => {
@@ -105,7 +102,9 @@ export default function TabLayout() {
                     name={isLoggedIn ? "profile/[id]" : "login"}
                     options={{
                         tabBarLabel: 'Profile',
-                        headerTitle: 'Profile',
+                        headerTitle: () => (
+                            <Text style={{ fontWeight: 'bold', fontSize: 22, marginLeft: 10 }}>Profile</Text>
+                        ),
                         headerRight: () => (
                             <Button text={'Logout'} onClick={handleLogOut} style={{
                                 padding: 10,
@@ -131,4 +130,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginHorizontal: 20,
     },
+
+    backArrow: {
+        marginLeft: 20,
+        marginRight: 5,
+    }
 })
