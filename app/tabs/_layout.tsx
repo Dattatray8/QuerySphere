@@ -2,34 +2,13 @@ import { router, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { useDispatch } from "react-redux";
-import axios from "axios";
-import { serverUrl } from "@/config/config";
-import { setUserData } from "@/redux/userSlice";
-import Toast from "react-native-toast-message";
 import LoginMessage from "../components/LoginMessage";
 import { useState } from "react";
 import Button from "../components/ui/Button";
 
 export default function TabLayout() {
-    const { user, isLoggedIn, loading } = useCurrentUser();
+    const { user, isLoggedIn, loading }: { user: any; isLoggedIn: boolean; loading: boolean } = useCurrentUser();
     const [showLoginMsg, setShowLoginMsg] = useState(false);
-    const dispatch = useDispatch();
-
-    async function handleLogOut() {
-        try {
-            await axios.get(`${serverUrl}/api/v1/auth/logout`, {
-                withCredentials: true,
-            });
-            dispatch(setUserData(null));
-            router.back();
-        } catch (error: any) {
-            Toast.show({
-                type: "error",
-                text1: error?.response?.data?.message || error?.message,
-            });
-        }
-    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -99,20 +78,26 @@ export default function TabLayout() {
                         },
                     }} />
                 <Tabs.Screen
-                    name={isLoggedIn ? "profile/[id]" : "login"}
+                    name="profile"
                     options={{
-                        tabBarLabel: 'Profile',
-                        headerTitle: () => (
-                            <Text style={{ fontWeight: 'bold', fontSize: 22, marginLeft: 10 }}>Profile</Text>
+                        tabBarLabel: "Profile",
+                        headerShown: false,
+                        tabBarIcon: ({ color }) => (
+                            <Ionicons name="person" size={26} color={color} />
                         ),
-                        headerRight: () => (
-                            <Button text={'Logout'} onClick={handleLogOut} style={{
-                                padding: 10,
-                                marginHorizontal: 20,
-                            }} />
-                        ),
-                        tabBarIcon: ({ color }) => <Ionicons size={28} name="person" color={color} />
-                    }} />
+                    }}
+                    listeners={{
+                        tabPress: (e) => {
+                            if (!isLoggedIn) {
+                                e.preventDefault();
+                                setShowLoginMsg(true);
+                            } else {
+                                e.preventDefault();
+                                router.replace("/tabs/profile");
+                            }
+                        },
+                    }}
+                />
             </Tabs>
             {showLoginMsg && <LoginMessage
                 visible={showLoginMsg}

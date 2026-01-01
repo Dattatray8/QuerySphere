@@ -1,9 +1,10 @@
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import axios from "axios"
 import { serverUrl } from '@/config/config'
 import Toast from 'react-native-toast-message'
+import { router } from 'expo-router'
 
 const search = () => {
   let [search, setSearch] = useState("");
@@ -70,11 +71,13 @@ const search = () => {
 
       {!loading && search && results.length !== 0 && (
         <View style={styles.resultContainer}>
-          {results.map((user, idx) => (
-            <View key={idx} style={styles.resultBox}>
-              <Image source={user?.profileImage ? { uri: user.profileImage } : require("../../assets/user.png")}
-                style={styles.resultImage} />
-              <Text style={styles.resultText}>{user.userName}</Text>
+          {results.map((user: any, idx) => (
+            <View key={idx}>
+              <Pressable onPress={() => router.push(`/tabs/profile/${user._id}`)} style={styles.resultBox}>
+                <Image source={user?.profileImage ? { uri: user.profileImage } : require("../../assets/user.png")}
+                  style={styles.resultImage} />
+                <Text style={styles.resultText}>{user.userName}</Text>
+              </Pressable>
             </View>
           ))}
         </View>
