@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
-    teacherApplications: [],
+    teacherApplications: [] as any[],
     allUsers: [],
     teacherAnswers: [],
   },

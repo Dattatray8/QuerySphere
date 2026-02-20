@@ -17,13 +17,13 @@ const iconMap = {
 };
 
 export default function getTabIcon(
-  tabKey: string,
+  tabKey: keyof typeof iconMap,
   size = 22,
   color = "#3b82f6"
 ) {
   return (
     <Ionicons
-      name={iconMap[tabKey] || "document-text-outline"}
+      name={iconMap[tabKey] as any || "document-text-outline"}
       size={size}
       color={color}
     />

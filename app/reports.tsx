@@ -16,16 +16,17 @@ import { useSocket } from "@/hooks/useSocket"; // Adjust path
 import { formatTimestamp } from "@/utils/formatTimeStamp";
 import Toast from "react-native-toast-message";
 import { api } from "@/hooks/useApi";
+import { Report } from "@/types/global.types";
 
 const Reports = () => {
-    const [reports, setReports] = useState([]);
+    const [reports, setReports] = useState<Report[]>([]);
     const [reportLoading, setReportLoading] = useState(false);
     const [approveReportLoading, setApproveReportLoading] = useState(false);
     const [removeReportLoading, setRemoveReportLoading] = useState(false);
     const [actionId, setActionId] = useState<string | null>(null);
 
     const router = useRouter();
-    const { socket } = useSocket();
+    const { socket } = useSocket() as any;
 
     const getReports = async () => {
         try {
@@ -44,7 +45,7 @@ const Reports = () => {
     }, []);
 
     useEffect(() => {
-        socket?.on("newReport", (report: any) => {
+        socket?.on("newReport", (report: Report) => {
             setReports((prev) => [report, ...prev]);
         });
         return () => socket?.off("newReport");

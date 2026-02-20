@@ -6,11 +6,12 @@ import LoginMessage from "../components/LoginMessage";
 import { useContext, useState } from "react";
 import Button from "../components/ui/Button";
 import SocketContext from "../context/SocketContext";
+import { SocketContextType } from "@/types/global.types";
 
 export default function TabLayout() {
     const { user, isLoggedIn, loading }: { user: any; isLoggedIn: boolean; loading: boolean } = useCurrentUser();
     const [showLoginMsg, setShowLoginMsg] = useState(false);
-    const { onlineUsers } = useContext(SocketContext);
+    const { onlineUsers } = useContext(SocketContext) as SocketContextType;
     return (
         <View style={{ flex: 1 }}>
             <Tabs>

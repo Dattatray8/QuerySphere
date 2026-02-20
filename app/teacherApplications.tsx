@@ -10,13 +10,14 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import useProfileTabData from '@/hooks/useProfileTabData';
+import { User } from '@/types/global.types';
 
 const TeacherApplications = () => {
-    const { socket } = useSocket();
+    const { socket } = useSocket() as any;
     const dispatch = useDispatch();
     const route = useRoute();
     let params = route?.params as { key: string }
-    useProfileTabData(params?.key,"");
+    useProfileTabData(params?.key, "");
 
     const { teacherApplications } = useSelector((state: any) => state.admin);
 
@@ -35,7 +36,7 @@ const TeacherApplications = () => {
     };
 
     useEffect(() => {
-        socket?.on("newTeacherApplication", (application) => {
+        socket?.on("newTeacherApplication", (application: User) => {
             dispatch(addApplication(application));
         });
 
@@ -43,9 +44,9 @@ const TeacherApplications = () => {
     }, [socket, teacherApplications, dispatch]);
 
     useEffect(() => {
-        socket?.on("canceledTeacherApplication", (application) => {
+        socket?.on("canceledTeacherApplication", (application: User) => {
             const updated = teacherApplications.filter(
-                (app) => app._id !== application._id
+                (app: User) => app._id !== application._id
             );
             dispatch(setTeacherApplications(updated));
         });
@@ -57,7 +58,7 @@ const TeacherApplications = () => {
         <View style={styles.card}>
             <View style={styles.userInfo}>
                 <Image
-                    source={{ uri: item?.profileImage || require("../assets/user.png") }}
+                    source={item?.profileImage ? { uri: item.profileImage } : require("../assets/user.png")}
                     style={styles.avatar}
                 />
                 <Text style={styles.userName}>{item?.userName}</Text>

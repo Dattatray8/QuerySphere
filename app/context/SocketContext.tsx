@@ -1,17 +1,22 @@
 import { serverUrl } from "@/config/config";
-import { createContext, useEffect, useState } from "react";
+import { SocketContextType, User } from "@/types/global.types";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-const SocketContext = createContext();
+const SocketContext = createContext<SocketContextType | undefined>(undefined);
 export default SocketContext;
 
-export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
-  const [isLoginned, setIsLoginned] = useState(true);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+interface SocketProviderProps {
+  children: ReactNode;
+}
 
-  const { userData } = useSelector((state) => state.user);
+export const SocketProvider = ({ children }: SocketProviderProps) => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isLoginned, setIsLoginned] = useState<boolean>(true);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+
+  const { userData } = useSelector((state: User) => state.user);
 
   useEffect(() => {
     if (userData?._id) {
@@ -41,7 +46,7 @@ export const SocketProvider = ({ children }) => {
     }
   }, [userData?._id]);
 
-  const value = {
+  const value: SocketContextType = {
     socket,
     onlineUsers,
     isLoginned,

@@ -44,7 +44,7 @@ function Tabs({ role, roleTabs, userId }: Props) {
           ]}
         >
           <View style={styles.icon}>
-            {getTabIcon(tab.key, 22, "#6b7280")}
+            {getTabIcon(tab.key as any, 22, "#6b7280")}
           </View>
 
           <Text style={styles.label}>{tab.label}</Text>

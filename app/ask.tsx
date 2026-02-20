@@ -11,10 +11,11 @@ import { setQuestions } from '@/redux/questionSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-native-toast-message'
 import BannedMessage from './components/BanMessage'
+import { User } from '@/types/global.types'
 
 const Ask = () => {
     const [question, setQuestion] = useState("");
-    const { userData } = useSelector((state) => state.user);
+    const { userData } = useSelector((state: User) => state.user);
     const [isBannedModalVisible, setIsBannedModalVisible] = useState(false);
     const [frontendImage, setFrontendImage] = useState<string | null>(null);
     const [backendImage, setBackendImage] = useState<{
@@ -25,7 +26,7 @@ const Ask = () => {
     const [mediaType, setMediaType] = useState("");
     const [height, setHeight] = useState(40);
     const [qZoomImg, setQZoomImg] = useState<boolean>(false);
-    const { questions } = useSelector((state) => state.question);
+    const { questions } = useSelector((state: any) => state.question);
     const handleImage = async () => {
         const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (!permission.granted) {

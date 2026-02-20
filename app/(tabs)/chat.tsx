@@ -13,20 +13,21 @@ import Toast from "react-native-toast-message";
 import * as ImagePicker from 'expo-image-picker';
 import { useVideoPlayer, VideoView } from "expo-video";
 import BannedMessage from "../components/BanMessage";
+import { Message, User } from "@/types/global.types";
 
 const Chat = () => {
   const dispatch = useDispatch();
   const { socket } = useSocket();
-  const { userData } = useSelector((state) => state.user);
+  const { userData } = useSelector((state: User) => state.user);
   const [isBannedModalVisible, setIsBannedModalVisible] = useState(false);
-  const { messages } = useSelector((state) => state.chat);
+  const { messages } = useSelector((state: any) => state.chat);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const [mediaType, setMediaType] = useState("");
   const [sendLoading, setSendLoading] = useState(false);
-  const [frontendImage, setFrontendImage] = useState(null);
+  const [frontendImage, setFrontendImage] = useState<string | null>(null);
   const [backendImage, setBackendImage] = useState<{
     uri: string;
     name: string;
@@ -135,7 +136,7 @@ const Chat = () => {
     socket?.on("newMessage", (msg) => {
       dispatch(addMessage(msg));
     });
-    return () => socket?.off("newMessage");
+    return () => { socket?.off("newMessage") };
   }, [socket]);
 
   const player = useVideoPlayer(frontendImage, (player) => {
@@ -156,7 +157,7 @@ const Chat = () => {
           onContentSizeChange={() =>
             scrollRef.current?.scrollToEnd({ animated: true })
           }>
-          {messages?.map((message, index) =>
+          {messages?.map((message: Message, index: number) =>
             message?.sender?.userName !== "AI" ? (
               message?.sender?._id === userData?._id ? (
                 <SenderMessage message={message} key={index} />
@@ -187,7 +188,7 @@ const Chat = () => {
             <VideoView
               player={player}
               style={{ width: '90%', height: '50%' }}
-              resizeMode='contain'
+              resizeMode="contain"
             />
           )}
         </View>

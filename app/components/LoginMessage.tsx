@@ -2,7 +2,7 @@ import { Modal, StyleSheet, Text, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
-const LoginMessage = ({ visible, onClose }) => {
+const LoginMessage = ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
     return (
         <Modal transparent visible={visible} animationType="fade">
             <View style={styles.overlay}>

@@ -6,8 +6,9 @@ import * as Speech from "expo-speech";
 import { router } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import ReportModal from "@/app/components/ReportModel";
+import { Message } from "@/types/global.types";
 
-const ReceiverMessage = ({ message }) => {
+const ReceiverMessage = ({ message }: { message: Message }) => {
     const [zoomImg, setZoomImg] = useState(null);
     const [showOptions, setShowOptions] = useState(false);
     const [reportVisible, setReportVisible] = useState(false);
@@ -31,7 +32,7 @@ const ReceiverMessage = ({ message }) => {
                 <View style={styles.userInfoRow}>
                     <Pressable style={styles.userInfo} onPress={() => router.push(`/(tabs)/profile/${message?.sender?._id}`)}>
                         <Image
-                            source={{ uri: message?.sender?.profileImage }}
+                            source={message?.sender?.profileImage ? { uri: message?.sender?.profileImage } : require("@/assets/user.png")}
                             style={styles.userImage}
                         />
                         <Text style={styles.username}>{message?.sender?.userName}</Text>

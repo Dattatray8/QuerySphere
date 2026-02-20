@@ -18,7 +18,7 @@ interface ReportModalProps {
     visible: boolean;
     onClose: () => void;
     reportedUserId: string;
-    contentId?: string;
+    contentId: string;
     contentType: string
 }
 

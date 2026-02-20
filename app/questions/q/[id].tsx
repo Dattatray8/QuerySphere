@@ -5,6 +5,7 @@ import VerfiedBadge from "@/app/components/ui/VerfiedBadge";
 import VideoPlayer from "@/app/components/VideoPlayer";
 import { serverUrl } from "@/config/config";
 import useQuestion from "@/hooks/useQuestion";
+import { Answer } from "@/types/global.types";
 import { formatTimestamp } from "@/utils/formatTimeStamp";
 import { Ionicons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
@@ -34,7 +35,7 @@ const Answers = () => {
   const [clipboardLoading, setClipboardLoading] = useState<Boolean>(false);
   const [copyTextId, setCopyTextId] = useState<string | null>(null);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
-  const [allAnswers, setAllAnswers] = useState([]);
+  const [allAnswers, setAllAnswers] = useState<Answer[]>([]);
   const [qZoomImg, setQZoomImg] = useState<Boolean>(false);
   const [aZoomImg, setAZoomImg] = useState<string | null>(null);
   const [reportQId, setReportQId] = useState<Boolean>(false);
@@ -238,12 +239,12 @@ const Answers = () => {
             <Text style={{ alignSelf: 'center', padding: 20, fontWeight: 'semibold', fontSize: 15 }}>Answers ({allAnswers?.length || 0})</Text>
             {aZoomImg && (
               <View style={styles.zoomImageContainer}>
-                <Ionicons name="close" style={{ right: 20, position: 'absolute', top: 10, backgroundColor: '#fff', padding: 5, borderRadius: 50, zIndex: 1000 }} size={25} onPress={() => setAZoomImg(false)} />
+                <Ionicons name="close" style={{ right: 20, position: 'absolute', top: 10, backgroundColor: '#fff', padding: 5, borderRadius: 50, zIndex: 1000 }} size={25} onPress={() => setAZoomImg(null)} />
                 <Image src={aZoomImg} alt='question image' style={styles.zoomImage} />
               </View>
             )}
 
-            {allAnswers.map((ans: object, idx: number) => (
+            {allAnswers.map((ans, idx: number) => (
               <View key={idx} style={{ paddingBottom: 40 }}>
 
                 <View style={{ flexDirection: 'row', gap: 10, paddingVertical: 10 }}>
@@ -253,7 +254,7 @@ const Answers = () => {
                 {ans?.media && ans?.mediaType === "image" && (
                   <Pressable onPress={() => {
                     scrollRef.current?.scrollTo({ y: 0, animated: true });
-                    setAZoomImg(ans?.media);
+                    setAZoomImg(ans?.media!);
                   }}>
                     <Image
                       src={ans?.media}

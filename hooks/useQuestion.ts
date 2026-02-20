@@ -1,11 +1,12 @@
 import { serverUrl } from "@/config/config";
+import { Question } from "@/types/global.types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
-function useQuestion(qId: string) {
+function useQuestion(qId: string)  : {question: Question, loading: boolean}{
   const [loading, setLoading] = useState(false);
-  const [question, setQuestion] = useState();
+  const [question, setQuestion] = useState<Question | null>(null);
   useEffect(() => {
     const getQuestion = async () => {
       try {
@@ -26,7 +27,7 @@ function useQuestion(qId: string) {
     };
     getQuestion();
   }, [qId]);
-  return { loading, question };
+  return { loading, question: question as Question };
 }
 
 export default useQuestion;

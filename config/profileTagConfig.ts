@@ -1,62 +1,68 @@
-
 // src/config/profileTabsConfig.js
 
+import { Dispatch } from "@reduxjs/toolkit";
 import {
-    setQuestionsAsked,
-    setQuestionsAnswered,
     setQuestionsAccepted,
+    setQuestionsAnswered,
+    setQuestionsAsked,
     setQuestionsVerifed,
 } from "../redux/studentSlice";
 
 import {
-    setTeacherApplications,
     setAllUsers,
     setTeacherAnswers,
+    setTeacherApplications,
 } from "../redux/adminSlice";
 
-export const profileTabConfig = {
-    // Student
-    questions: {
-        endpoint: (id) => `/api/v1/student/asked/${id}`,
-        reducer: (dispatch, data) =>
-            dispatch(setQuestionsAsked(data.questions)),
-    },
+interface TabConfig {
+  endpoint: (id?: string) => string;
+  reducer: (dispatch: Dispatch, data: any) => void;
+}
 
-    s_answers: {
-        endpoint: (id) => `/api/v1/student/answered/${id}`,
-        reducer: (dispatch, data) =>
-            dispatch(setQuestionsAnswered(data.answeredQuestion)),
-    },
+interface ProfileTabConfig {
+  [key: string]: TabConfig;
+}
 
-    accepted: {
-        endpoint: (id) => `/api/v1/student/answered/accepted/${id}`,
-        reducer: (dispatch, data) =>
-            dispatch(setQuestionsAccepted(data.answerAcceptedQuestion)),
-    },
+export const profileTabConfig: ProfileTabConfig = {
+  // Student
+  questions: {
+    endpoint: (id?: string) => `/api/v1/student/asked/${id}`,
+    reducer: (dispatch, data) => dispatch(setQuestionsAsked(data.questions)),
+  },
 
-    t_verified: {
-        endpoint: (id) => `/api/v1/student/answered/verified/${id}`,
-        reducer: (dispatch, data) =>
-            dispatch(setQuestionsVerifed(data.answerVerifiedQuestion)),
-    },
+  s_answers: {
+    endpoint: (id?: string) => `/api/v1/student/answered/${id}`,
+    reducer: (dispatch, data) =>
+      dispatch(setQuestionsAnswered(data.answeredQuestion)),
+  },
 
-    // Teacher
-    t_answers: {
-        endpoint: (id) => `/api/v1/teacher/answered/${id}`,
-        reducer: (dispatch, data) =>
-            dispatch(setTeacherAnswers(data.answeredQuestion)),
-    },
+  accepted: {
+    endpoint: (id?: string) => `/api/v1/student/answered/accepted/${id}`,
+    reducer: (dispatch, data) =>
+      dispatch(setQuestionsAccepted(data.answerAcceptedQuestion)),
+  },
 
-    // Admin
-    teacherApplications: {
-        endpoint: () => `/api/v1/admin/applications`,
-        reducer: (dispatch, data) =>
-            dispatch(setTeacherApplications(data.users)),
-    },
+  t_verified: {
+    endpoint: (id?: string) => `/api/v1/student/answered/verified/${id}`,
+    reducer: (dispatch, data) =>
+      dispatch(setQuestionsVerifed(data.answerVerifiedQuestion)),
+  },
 
-    allUsers: {
-        endpoint: () => `/api/v1/admin/users`,
-        reducer: (dispatch, data) =>
-            dispatch(setAllUsers(data.users)),
-    },
+  // Teacher
+  t_answers: {
+    endpoint: (id?: string) => `/api/v1/teacher/answered/${id}`,
+    reducer: (dispatch, data) =>
+      dispatch(setTeacherAnswers(data.answeredQuestion)),
+  },
+
+  // Admin
+  teacherApplications: {
+    endpoint: () => `/api/v1/admin/applications`,
+    reducer: (dispatch, data) => dispatch(setTeacherApplications(data.users)),
+  },
+
+  allUsers: {
+    endpoint: () => `/api/v1/admin/users`,
+    reducer: (dispatch, data) => dispatch(setAllUsers(data.users)),
+  },
 };

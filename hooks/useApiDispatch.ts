@@ -1,11 +1,14 @@
+import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../redux/questionSlice";
-import Toast from "react-native-toast-message";
 
 export default function useApiDispatch() {
   const dispatch = useDispatch();
 
-  const run = async (promiseFunc, onSuccess) => {
+  const run = async <T>(
+    promiseFunc: () => Promise<{ data: T }>,
+    onSuccess?: (data: T) => void,
+  ): Promise<void> => {
     try {
       dispatch(setLoading(true));
       const res = await promiseFunc();

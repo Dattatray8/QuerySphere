@@ -56,7 +56,7 @@ const Features = () => {
             <View style={styles.container2}>
                 {features.map((feature, index) => (
                     <View key={index} style={styles.feature}>
-                        <Ionicons name={feature.icon} style={[styles.icon, { backgroundColor: feature.bg }]} color={feature.color} />
+                        <Ionicons name={feature.icon as any} style={[styles.icon, { backgroundColor: feature.bg }]} color={feature.color} />
                         <Text style={styles.title}>{feature.title}</Text>
                         <Text style={styles.desc}>{feature.desc}</Text>
                     </View>

@@ -4,10 +4,13 @@ import Toast from "react-native-toast-message";
 
 export const useSendReport = () => {
   const [loading, setLoading] = useState(false);
-  const sendReport = async (reason, reportedUserId, contentId, contentType) => {
+  const sendReport = async (
+    reason: string,
+    reportedUserId: string,
+    contentId: string,
+    contentType: string,
+  ) => {
     try {
-  console.log("api")
-
       setLoading(true);
       const res = await api.post(
         "/api/v1/report",
@@ -16,7 +19,7 @@ export const useSendReport = () => {
       );
       Toast.show({ type: "success", text1: res?.data?.message });
     } catch (error: any) {
-      console.log(error.response)
+      console.log(error.response);
       Toast.show({
         type: "error",
         text1: error?.response?.data?.message || error.message,

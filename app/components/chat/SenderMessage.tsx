@@ -12,9 +12,10 @@ import { formatTimestamp } from "@/utils/formatTimeStamp";
 import * as Speech from "expo-speech";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { router } from "expo-router";
+import { Message } from "@/types/global.types";
 
 
-const SenderMessage = ({ message }) => {
+const SenderMessage = ({ message }: { message: Message }) => {
     const [zoomImg, setZoomImg] = useState(null);
 
     const speakText = (text: string) => {
@@ -41,7 +42,7 @@ const SenderMessage = ({ message }) => {
                     </Pressable>
 
                     <Image
-                        source={{ uri: message?.sender?.profileImage }}
+                        source={message?.sender?.profileImage ? { uri: message?.sender?.profileImage } : require("@/assets/user.png")}
                         style={styles.userImage}
                     />
                 </Pressable>

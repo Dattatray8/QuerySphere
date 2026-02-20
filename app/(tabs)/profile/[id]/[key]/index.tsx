@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import useProfileTabData from '@/hooks/useProfileTabData';
 import { getLabel } from '@/utils/getLabel';
 import Question from '@/app/components/question/Question';
+import { Question as Q } from '@/types/global.types';
 
 const Index = () => {
     const route = useRoute();
@@ -12,12 +13,12 @@ const Index = () => {
     const { profileData } = useSelector((state: any) => state.user);
     const { loading } = useProfileTabData(params?.key, params?.id);
 
-    const { questionsAsked } = useSelector((state) => state.student);
-    const { questionsAnswered } = useSelector((state) => state.student);
+    const { questionsAsked } = useSelector((state: Q) => state.student);
+    const { questionsAnswered } = useSelector((state: Q) => state.student);
     const { questionsAccepted, questionsVerified } = useSelector(
-        (state) => state.student
+        (state: Q) => state.student
     );
-    const { teacherAnswers } = useSelector((state) => state.admin);
+    const { teacherAnswers } = useSelector((state: Q) => state.admin);
     let tabLabel = getLabel(params?.key);
     let dataToRender = [];
     if (tabLabel === "Questions" && profileData?.role === "student") {
